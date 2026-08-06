@@ -40,4 +40,16 @@ class AuditControllerIntegrationTest {
         mvc.perform(post("/audit/write").contentType(MediaType.APPLICATION_JSON).content("{\"eventType\":\"READ\"}"))
                 .andExpect(status().isBadRequest());
     }
+
+    @Test void exportsSelectedRecordsWithVerificationMetadata() throws Exception {
+        String event = """
+                {"eventType":"READ","actorId":"user-9","resourceType":"DOCUMENT","resourceId":"doc-8","payload":{"ssn":"123-45-6789"}}
+                """;
+        mvc.perform(post("/audit/write").contentType(MediaType.APPLICATION_JSON).content(event))
+                .andExpect(status().isCreated());
+        mvc.perform(get("/audit/export").param("actorId", "user-9"))
+                .andExpect(status().isOk()).andExpect(jsonPath("$.algorithm").value("SHA-256"))
+                .andExpect(jsonPath("$.recordCount").value(1))
+                .andExpect(jsonPath("$.records[0].payload.ssn").value("[REDACTED]"));
+    }
 }
