@@ -5,6 +5,7 @@
 - Java 21 compilation: `mvn compile` completed successfully.
 - Hash-chain unit tests: intact chains verify successfully and modified payloads yield `SELF_HASH_MISMATCH`.
 - HTTP integration tests: successful writes, filtered queries, configured redaction, verification, compliance reports, exports, and invalid write requests.
+- Query hardening: reversed time ranges are rejected with a clear 400 response, and compliance reports require a non-blank account ID.
 - Spring application context: completed successfully in 68.56 seconds in the local environment.
 
 ## Submission review checklist

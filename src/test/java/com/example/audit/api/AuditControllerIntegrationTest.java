@@ -17,7 +17,8 @@ class AuditControllerIntegrationTest {
 
     @BeforeEach void setUp() {
         ObjectMapper mapper = new ObjectMapper();
-        mvc = standaloneSetup(new AuditController(new AuditLogService(mapper, 365, "token,ssn"))).build();
+        mvc = standaloneSetup(new AuditController(new AuditLogService(mapper, 365, "token,ssn")))
+                .setControllerAdvice(new ApiExceptionHandler()).build();
     }
 
     @Test void writesQueriesRedactsAndVerifies() throws Exception {
@@ -39,6 +40,11 @@ class AuditControllerIntegrationTest {
     @Test void rejectsInvalidWritePayload() throws Exception {
         mvc.perform(post("/audit/write").contentType(MediaType.APPLICATION_JSON).content("{\"eventType\":\"READ\"}"))
                 .andExpect(status().isBadRequest());
+    }
+
+    @Test void rejectsAnInvalidTimeRange() throws Exception {
+        mvc.perform(get("/audit/query").param("from", "2026-02-01T00:00:00Z").param("to", "2026-01-01T00:00:00Z"))
+                .andExpect(status().isBadRequest()).andExpect(jsonPath("$.error").value("from must not be after to"));
     }
 
     @Test void exportsSelectedRecordsWithVerificationMetadata() throws Exception {
