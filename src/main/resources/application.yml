@@ -1,0 +1,11 @@
+spring:
+  application:
+    name: audit-log-service
+audit:
+  retention-days: 365
+  sensitive-payload-fields: password,ssn,token,secret
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
