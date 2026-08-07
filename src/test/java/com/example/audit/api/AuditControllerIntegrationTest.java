@@ -1,6 +1,7 @@
 package com.example.audit.api;
 
 import com.example.audit.service.AuditLogService;
+import com.example.audit.persistence.InMemoryAuditStore;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
@@ -19,7 +20,7 @@ class AuditControllerIntegrationTest {
 
     @BeforeEach void setUp() {
         ObjectMapper mapper = new ObjectMapper();
-        mvc = standaloneSetup(new AuditController(new AuditLogService(mapper, Clock.systemUTC(), 365, "token,ssn", "test-redaction-key", 65536)))
+        mvc = standaloneSetup(new AuditController(new AuditLogService(mapper, Clock.systemUTC(), new InMemoryAuditStore(), 365, "token,ssn", "test-redaction-key", 65536)))
                 .addFilters(new AuditCacheControlFilter())
                 .setControllerAdvice(new ApiExceptionHandler()).build();
     }

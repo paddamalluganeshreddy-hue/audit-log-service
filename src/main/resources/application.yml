@@ -1,6 +1,17 @@
 spring:
   application:
     name: audit-log-service
+  datasource:
+    url: jdbc:h2:mem:auditlog;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    username: sa
+    password:
+  jpa:
+    hibernate:
+      ddl-auto: update
+    open-in-view: false
+  h2:
+    console:
+      enabled: true
 audit:
   retention-days: 365
   sensitive-payload-fields: password,ssn,token,secret
@@ -12,3 +23,6 @@ management:
     web:
       exposure:
         include: health,info
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html

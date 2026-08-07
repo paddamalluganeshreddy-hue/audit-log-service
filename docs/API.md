@@ -11,6 +11,8 @@
 | GET | `/audit/export` | Return selected records and chain-verification metadata. |
 | GET | `/audit/report` | Return `ACCOUNT_ACCESS` events for a client account. |
 
+Interactive API documentation is available at `/swagger-ui.html`; the generated OpenAPI description is at `/v3/api-docs`.
+
 Write-request field limits: `eventType`, `actorId`, and `resourceType` are limited to 128 characters; `resourceId` is limited to 256 characters.
 Payloads larger than the configured `audit.max-payload-bytes` limit (65,536 bytes by default) are rejected.
 

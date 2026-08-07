@@ -21,6 +21,7 @@ This log records AI-assisted work performed in this repository. The submitting e
 | Payload-size guard | Proposed a configurable maximum serialized payload size before a record can enter the chain. | Accepted with a 65,536-byte default and a rejection test. | Focused test suite passed. |
 | Response-cache control | Proposed no-store cache headers for audit API responses containing sensitive metadata. | Accepted to reduce accidental browser or intermediary caching. | HTTP integration test passed. |
 | Dependency maintenance | Proposed Dependabot configuration for Maven and GitHub Actions updates. | Accepted to surface dependency and workflow updates for review. | Final `mvn verify` passed. |
+| H2 and Swagger | Proposed H2/JPA persistence and Springdoc Swagger UI so API endpoints can be tested interactively. | Accepted for local development. H2 creates the `AUDIT_RECORDS` table automatically; production still needs a durable database. | Full test suite passed: 14 tests, including H2 table persistence. |
 
 ## Rejected or revised AI output
 

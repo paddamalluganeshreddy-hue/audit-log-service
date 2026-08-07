@@ -10,6 +10,10 @@ mvn spring-boot:run
 
 Run validation with `mvn test`. The service listens on port 8080 by default.
 
+## Interactive testing
+
+Start the application, then open [Swagger UI](http://localhost:8080/swagger-ui.html) to execute every endpoint. H2 runs in-memory and creates the `AUDIT_RECORDS` table automatically; during local development inspect it at [H2 Console](http://localhost:8080/h2-console) using JDBC URL `jdbc:h2:mem:auditlog`, user `sa`, and an empty password.
+
 ## API
 
 Write an immutable record (the server assigns timestamp and hashes):
