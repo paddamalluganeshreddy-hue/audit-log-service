@@ -22,6 +22,7 @@ This log records AI-assisted work performed in this repository. The submitting e
 | Response-cache control | Proposed no-store cache headers for audit API responses containing sensitive metadata. | Accepted to reduce accidental browser or intermediary caching. | HTTP integration test passed. |
 | Dependency maintenance | Proposed Dependabot configuration for Maven and GitHub Actions updates. | Accepted to surface dependency and workflow updates for review. | Final `mvn verify` passed. |
 | H2 and Swagger | Proposed H2/JPA persistence and Springdoc Swagger UI so API endpoints can be tested interactively. | Accepted for local development. H2 creates the `AUDIT_RECORDS` table automatically; production still needs a durable database. | Full test suite passed: 14 tests, including H2 table persistence. |
+| Swagger presentation metadata | Proposed an OpenAPI title, endpoint tag, and concise operation summaries to make interactive API testing self-explanatory. | Accepted for the live demo and endpoint testing workflow. | Full `mvn verify` passed. |
 
 ## Rejected or revised AI output
 
