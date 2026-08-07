@@ -16,6 +16,7 @@ This log records AI-assisted work performed in this repository. The submitting e
 | Redaction redesign | Found that response-only redaction prevented recomputation of a returned `selfHash`. Proposed ingest-time keyed HMAC commitments instead. | Accepted. Sensitive top-level configured fields are replaced before storage and hash chaining; plaintext is not retained by this prototype. | `1ed2506`; full `mvn verify` passed. |
 | AI-log consolidation | Consolidated prior AI assistance, accepted changes, and revisions into this file. | Accepted. Future AI-assisted stages will be appended here before commit. | `aabf816`. |
 | Validation error contract | Proposed a consistent JSON response containing a general error and field-specific validation messages for invalid write requests. | Accepted to make API-client error handling predictable. | HTTP integration test passed. |
+| Export scope guard | Identified that an unfiltered export could disclose the entire audit log. Proposed requiring an actor or resource filter. | Accepted to reduce accidental broad data disclosure. | HTTP integration test passed. |
 
 ## Rejected or revised AI output
 

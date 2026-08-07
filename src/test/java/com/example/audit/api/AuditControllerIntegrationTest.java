@@ -68,4 +68,10 @@ class AuditControllerIntegrationTest {
                 .andExpect(jsonPath("$.lastRecordSelfHash").isNotEmpty())
                 .andExpect(jsonPath("$.records[0].payload.ssn").value(startsWith("[REDACTED:")));
     }
+
+    @Test void rejectsUnfilteredExport() throws Exception {
+        mvc.perform(get("/audit/export"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.error").value("actorId or resourceId is required for export"));
+    }
 }

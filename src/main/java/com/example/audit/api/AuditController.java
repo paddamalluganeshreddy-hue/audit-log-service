@@ -24,6 +24,7 @@ public class AuditController {
     @GetMapping("/verify") public Object verify() { return service.verify(); }
     @PostMapping("/retention/archive") public Map<String, Integer> archiveExpired() { return Map.of("archived", service.archiveExpired()); }
     @GetMapping("/export") public AuditExport export(@RequestParam(required = false) String actorId, @RequestParam(required = false) String resourceId) {
+        if (!hasText(actorId) && !hasText(resourceId)) throw new IllegalArgumentException("actorId or resourceId is required for export");
         List<AuditRecord> records = service.export(actorId, resourceId);
         String firstPreviousHash = records.isEmpty() ? null : records.getFirst().prevHash();
         String lastSelfHash = records.isEmpty() ? null : records.getLast().selfHash();
@@ -32,4 +33,5 @@ public class AuditController {
     }
     @GetMapping("/report") public Map<String, Object> report(@RequestParam @NotBlank String accountId, @RequestParam(required = false) String actorId, @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant from, @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant to) { if (accountId.isBlank()) throw new IllegalArgumentException("accountId must not be blank"); validateTimeRange(from, to); List<AuditRecord> records = service.query(actorId, "CLIENT_ACCOUNT", accountId, "ACCOUNT_ACCESS", from, to, 0, 200); return Map.of("accountId", accountId, "eventType", "ACCOUNT_ACCESS", "records", records, "total", service.count(actorId, "CLIENT_ACCOUNT", accountId, "ACCOUNT_ACCESS", from, to)); }
     private static void validateTimeRange(Instant from, Instant to) { if (from != null && to != null && from.isAfter(to)) throw new IllegalArgumentException("from must not be after to"); }
+    private static boolean hasText(String value) { return value != null && !value.isBlank(); }
 }
