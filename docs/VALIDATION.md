@@ -10,6 +10,7 @@
 - Retention integrity: a deterministic clock test archives expired data and confirms that verification and queries include the archive.
 - Verification diagnostics: a broken predecessor link identifies the affected sequence and reports the number of records actually examined.
 - Continuous integration: GitHub Actions runs `mvn --batch-mode verify` with Temurin Java 21 for pushes and pull requests to `main`.
+- Dependency maintenance: Dependabot checks Maven and GitHub Actions dependencies weekly and opens up to five update pull requests per ecosystem.
 - Spring application context: completed successfully in 68.56 seconds in the local environment.
 
 ## Submission review checklist

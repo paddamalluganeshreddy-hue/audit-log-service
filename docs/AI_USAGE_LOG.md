@@ -20,6 +20,7 @@ This log records AI-assisted work performed in this repository. The submitting e
 | Metadata bounds | Proposed maximum lengths for event and identifier fields to avoid oversized chain metadata. | Accepted with 128-character event/actor/type limits and a 256-character resource-ID limit. | HTTP integration test passed. |
 | Payload-size guard | Proposed a configurable maximum serialized payload size before a record can enter the chain. | Accepted with a 65,536-byte default and a rejection test. | Focused test suite passed. |
 | Response-cache control | Proposed no-store cache headers for audit API responses containing sensitive metadata. | Accepted to reduce accidental browser or intermediary caching. | HTTP integration test passed. |
+| Dependency maintenance | Proposed Dependabot configuration for Maven and GitHub Actions updates. | Accepted to surface dependency and workflow updates for review. | Final `mvn verify` passed. |
 
 ## Rejected or revised AI output
 
