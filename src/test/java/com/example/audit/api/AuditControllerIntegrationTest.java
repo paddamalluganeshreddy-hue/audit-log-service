@@ -48,6 +48,11 @@ class AuditControllerIntegrationTest {
                 .andExpect(status().isBadRequest()).andExpect(jsonPath("$.error").value("from must not be after to"));
     }
 
+    @Test void rejectsBlankComplianceAccountId() throws Exception {
+        mvc.perform(get("/audit/report").param("accountId", " "))
+                .andExpect(status().isBadRequest()).andExpect(jsonPath("$.error").value("accountId must not be blank"));
+    }
+
     @Test void exportsSelectedRecordsWithVerificationMetadata() throws Exception {
         String event = """
                 {"eventType":"READ","actorId":"user-9","resourceType":"DOCUMENT","resourceId":"doc-8","payload":{"ssn":"123-45-6789"}}
