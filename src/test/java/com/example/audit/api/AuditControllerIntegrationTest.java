@@ -12,13 +12,14 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup;
+import static org.hamcrest.Matchers.startsWith;
 
 class AuditControllerIntegrationTest {
     private MockMvc mvc;
 
     @BeforeEach void setUp() {
         ObjectMapper mapper = new ObjectMapper();
-        mvc = standaloneSetup(new AuditController(new AuditLogService(mapper, Clock.systemUTC(), 365, "token,ssn")))
+        mvc = standaloneSetup(new AuditController(new AuditLogService(mapper, Clock.systemUTC(), 365, "token,ssn", "test-redaction-key")))
                 .setControllerAdvice(new ApiExceptionHandler()).build();
     }
 
@@ -31,7 +32,7 @@ class AuditControllerIntegrationTest {
                 .andExpect(jsonPath("$.selfHash").isNotEmpty());
         mvc.perform(get("/audit/query").param("resourceId", "acct-42"))
                 .andExpect(status().isOk()).andExpect(jsonPath("$.total").value(1))
-                .andExpect(jsonPath("$.records[0].payload.token").value("[REDACTED]"));
+                .andExpect(jsonPath("$.records[0].payload.token").value(startsWith("[REDACTED:")));
         mvc.perform(get("/audit/verify"))
                 .andExpect(status().isOk()).andExpect(jsonPath("$.intact").value(true));
         mvc.perform(get("/audit/report").param("accountId", "acct-42"))
@@ -64,6 +65,6 @@ class AuditControllerIntegrationTest {
                 .andExpect(jsonPath("$.recordCount").value(1))
                 .andExpect(jsonPath("$.fullChainVerification.intact").value(true))
                 .andExpect(jsonPath("$.lastRecordSelfHash").isNotEmpty())
-                .andExpect(jsonPath("$.records[0].payload.ssn").value("[REDACTED]"));
+                .andExpect(jsonPath("$.records[0].payload.ssn").value(startsWith("[REDACTED:")));
     }
 }

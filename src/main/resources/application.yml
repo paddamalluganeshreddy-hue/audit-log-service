@@ -4,6 +4,8 @@ spring:
 audit:
   retention-days: 365
   sensitive-payload-fields: password,ssn,token,secret
+  # Set AUDIT_REDACTION_KEY to a unique secret outside source control in real deployments.
+  redaction-key: ${AUDIT_REDACTION_KEY:development-only-change-me}
 management:
   endpoints:
     web:
