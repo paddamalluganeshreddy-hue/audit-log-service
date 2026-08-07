@@ -14,7 +14,8 @@ This log records AI-assisted work performed in this repository. The submitting e
 | Verification diagnostics | Found that a predecessor-link mismatch underreported the number of inspected records. | Accepted. The result now reports the affected record as inspected. | `837cabd`, focused tests passed. |
 | Continuous integration | Generated a GitHub Actions workflow for Java 21 and Maven verification. | Accepted. Workflow runs on pushes and pull requests to `main`. | `98fbcaf`; local `mvn verify` passed. |
 | Redaction redesign | Found that response-only redaction prevented recomputation of a returned `selfHash`. Proposed ingest-time keyed HMAC commitments instead. | Accepted. Sensitive top-level configured fields are replaced before storage and hash chaining; plaintext is not retained by this prototype. | `1ed2506`; full `mvn verify` passed. |
-| AI-log consolidation | Consolidated prior AI assistance, accepted changes, and revisions into this file. | Accepted. Future AI-assisted stages will be appended here before commit. | Pending current documentation commit. |
+| AI-log consolidation | Consolidated prior AI assistance, accepted changes, and revisions into this file. | Accepted. Future AI-assisted stages will be appended here before commit. | `aabf816`. |
+| Validation error contract | Proposed a consistent JSON response containing a general error and field-specific validation messages for invalid write requests. | Accepted to make API-client error handling predictable. | HTTP integration test passed. |
 
 ## Rejected or revised AI output
 

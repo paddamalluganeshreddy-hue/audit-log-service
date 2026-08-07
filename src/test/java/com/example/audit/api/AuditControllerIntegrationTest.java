@@ -41,7 +41,8 @@ class AuditControllerIntegrationTest {
 
     @Test void rejectsInvalidWritePayload() throws Exception {
         mvc.perform(post("/audit/write").contentType(MediaType.APPLICATION_JSON).content("{\"eventType\":\"READ\"}"))
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isBadRequest()).andExpect(jsonPath("$.error").value("Validation failed"))
+                .andExpect(jsonPath("$.fieldErrors.actorId").value("must not be blank"));
     }
 
     @Test void rejectsAnInvalidTimeRange() throws Exception {
