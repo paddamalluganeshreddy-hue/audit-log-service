@@ -20,6 +20,7 @@ class AuditControllerIntegrationTest {
     @BeforeEach void setUp() {
         ObjectMapper mapper = new ObjectMapper();
         mvc = standaloneSetup(new AuditController(new AuditLogService(mapper, Clock.systemUTC(), 365, "token,ssn", "test-redaction-key", 65536)))
+                .addFilters(new AuditCacheControlFilter())
                 .setControllerAdvice(new ApiExceptionHandler()).build();
     }
 
@@ -34,7 +35,8 @@ class AuditControllerIntegrationTest {
                 .andExpect(status().isOk()).andExpect(jsonPath("$.total").value(1))
                 .andExpect(jsonPath("$.records[0].payload.token").value(startsWith("[REDACTED:")));
         mvc.perform(get("/audit/verify"))
-                .andExpect(status().isOk()).andExpect(jsonPath("$.intact").value(true));
+                .andExpect(status().isOk()).andExpect(jsonPath("$.intact").value(true))
+                .andExpect(header().string("Cache-Control", "no-store, max-age=0"));
         mvc.perform(get("/audit/report").param("accountId", "acct-42"))
                 .andExpect(status().isOk()).andExpect(jsonPath("$.total").value(1));
     }
