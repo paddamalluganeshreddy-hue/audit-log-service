@@ -28,7 +28,7 @@ public final class HashChain {
         for (int index = 0; index < records.size(); index++) {
             AuditRecord record = records.get(index);
             if (!java.util.Objects.equals(expectedPrevious, record.prevHash()))
-                return ChainVerification.broken(index, record.sequence(), "PREVIOUS_HASH_MISMATCH", "prevHash does not link to preceding record");
+                return ChainVerification.broken(index + 1L, record.sequence(), "PREVIOUS_HASH_MISMATCH", "prevHash does not link to preceding record");
             String expectedSelf = compute(record.sequence(), record.eventType(), record.actorId(), record.resourceType(), record.resourceId(), record.payload(), record.timestamp().toString(), record.prevHash(), mapper);
             if (!expectedSelf.equals(record.selfHash()))
                 return ChainVerification.broken(index + 1L, record.sequence(), "SELF_HASH_MISMATCH", "record contents do not match selfHash");

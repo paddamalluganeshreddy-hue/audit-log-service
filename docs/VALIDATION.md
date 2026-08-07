@@ -8,6 +8,7 @@
 - Query hardening: reversed time ranges are rejected with a clear 400 response, and compliance reports require a non-blank account ID.
 - Error contract: blank compliance account IDs return a clear JSON 400 response rather than an internal-server error.
 - Retention integrity: a deterministic clock test archives expired data and confirms that verification and queries include the archive.
+- Verification diagnostics: a broken predecessor link identifies the affected sequence and reports the number of records actually examined.
 - Spring application context: completed successfully in 68.56 seconds in the local environment.
 
 ## Submission review checklist
