@@ -3,10 +3,11 @@ package com.example.audit.api;
 import tools.jackson.databind.JsonNode;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
 public record AuditWriteRequest(
-        @NotBlank String eventType,
-        @NotBlank String actorId,
-        @NotBlank String resourceType,
-        @NotBlank String resourceId,
+        @NotBlank @Size(max = 128) String eventType,
+        @NotBlank @Size(max = 128) String actorId,
+        @NotBlank @Size(max = 128) String resourceType,
+        @NotBlank @Size(max = 256) String resourceId,
         @NotNull JsonNode payload) { }

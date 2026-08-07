@@ -11,6 +11,8 @@
 | GET | `/audit/export` | Return selected records and chain-verification metadata. |
 | GET | `/audit/report` | Return `ACCOUNT_ACCESS` events for a client account. |
 
+Write-request field limits: `eventType`, `actorId`, and `resourceType` are limited to 128 characters; `resourceId` is limited to 256 characters.
+
 ## Compliance-report scope
 
 “Audit of client account access” is interpreted as events written with `eventType=ACCOUNT_ACCESS`, `resourceType=CLIENT_ACCOUNT`, and `resourceId` equal to the supplied `accountId`. The report additionally accepts actor and time filters. Ambiguities to resolve with a regulator include the official account identifier, required access event taxonomy, authorization model, retention jurisdiction, time zone, export format/signing, and whether redacted fields may be disclosed.

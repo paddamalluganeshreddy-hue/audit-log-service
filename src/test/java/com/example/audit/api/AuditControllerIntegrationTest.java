@@ -45,6 +45,13 @@ class AuditControllerIntegrationTest {
                 .andExpect(jsonPath("$.fieldErrors.actorId").value("must not be blank"));
     }
 
+    @Test void rejectsOversizedAuditMetadata() throws Exception {
+        String oversizedActor = "a".repeat(129);
+        String event = "{\"eventType\":\"READ\",\"actorId\":\"" + oversizedActor + "\",\"resourceType\":\"DOCUMENT\",\"resourceId\":\"doc-1\",\"payload\":{}}";
+        mvc.perform(post("/audit/write").contentType(MediaType.APPLICATION_JSON).content(event))
+                .andExpect(status().isBadRequest()).andExpect(jsonPath("$.fieldErrors.actorId").value("size must be between 0 and 128"));
+    }
+
     @Test void rejectsAnInvalidTimeRange() throws Exception {
         mvc.perform(get("/audit/query").param("from", "2026-02-01T00:00:00Z").param("to", "2026-01-01T00:00:00Z"))
                 .andExpect(status().isBadRequest()).andExpect(jsonPath("$.error").value("from must not be after to"));

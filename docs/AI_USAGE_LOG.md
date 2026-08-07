@@ -17,6 +17,7 @@ This log records AI-assisted work performed in this repository. The submitting e
 | AI-log consolidation | Consolidated prior AI assistance, accepted changes, and revisions into this file. | Accepted. Future AI-assisted stages will be appended here before commit. | `aabf816`. |
 | Validation error contract | Proposed a consistent JSON response containing a general error and field-specific validation messages for invalid write requests. | Accepted to make API-client error handling predictable. | HTTP integration test passed. |
 | Export scope guard | Identified that an unfiltered export could disclose the entire audit log. Proposed requiring an actor or resource filter. | Accepted to reduce accidental broad data disclosure. | HTTP integration test passed. |
+| Metadata bounds | Proposed maximum lengths for event and identifier fields to avoid oversized chain metadata. | Accepted with 128-character event/actor/type limits and a 256-character resource-ID limit. | HTTP integration test passed. |
 
 ## Rejected or revised AI output
 
