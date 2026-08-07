@@ -9,6 +9,7 @@
 - Error contract: blank compliance account IDs return a clear JSON 400 response rather than an internal-server error.
 - Retention integrity: a deterministic clock test archives expired data and confirms that verification and queries include the archive.
 - Verification diagnostics: a broken predecessor link identifies the affected sequence and reports the number of records actually examined.
+- Continuous integration: GitHub Actions runs `mvn --batch-mode verify` with Temurin Java 21 for pushes and pull requests to `main`.
 - Spring application context: completed successfully in 68.56 seconds in the local environment.
 
 ## Submission review checklist
