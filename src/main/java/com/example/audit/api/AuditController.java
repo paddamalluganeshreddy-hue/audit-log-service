@@ -23,7 +23,13 @@ public class AuditController {
     }
     @GetMapping("/verify") public Object verify() { return service.verify(); }
     @PostMapping("/retention/archive") public Map<String, Integer> archiveExpired() { return Map.of("archived", service.archiveExpired()); }
-    @GetMapping("/export") public Map<String, Object> export(@RequestParam(required = false) String actorId, @RequestParam(required = false) String resourceId) { List<AuditRecord> records = service.export(actorId, resourceId); return Map.of("algorithm", "SHA-256", "records", records, "recordCount", records.size(), "verificationScope", "Export hashes link to the full service chain; verify against included boundary hashes or the full chain."); }
+    @GetMapping("/export") public AuditExport export(@RequestParam(required = false) String actorId, @RequestParam(required = false) String resourceId) {
+        List<AuditRecord> records = service.export(actorId, resourceId);
+        String firstPreviousHash = records.isEmpty() ? null : records.getFirst().prevHash();
+        String lastSelfHash = records.isEmpty() ? null : records.getLast().selfHash();
+        return new AuditExport("SHA-256", records, records.size(), firstPreviousHash, lastSelfHash, service.verify(),
+                "Each record selfHash can be recomputed independently. firstRecordPreviousHash and lastRecordSelfHash anchor this filtered export in the full service chain; fullChainVerification verifies the source chain at export time.");
+    }
     @GetMapping("/report") public Map<String, Object> report(@RequestParam @NotBlank String accountId, @RequestParam(required = false) String actorId, @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant from, @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant to) { validateTimeRange(from, to); List<AuditRecord> records = service.query(actorId, "CLIENT_ACCOUNT", accountId, "ACCOUNT_ACCESS", from, to, 0, 200); return Map.of("accountId", accountId, "eventType", "ACCOUNT_ACCESS", "records", records, "total", service.count(actorId, "CLIENT_ACCOUNT", accountId, "ACCOUNT_ACCESS", from, to)); }
     private static void validateTimeRange(Instant from, Instant to) { if (from != null && to != null && from.isAfter(to)) throw new IllegalArgumentException("from must not be after to"); }
 }

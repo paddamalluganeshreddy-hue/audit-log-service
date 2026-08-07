@@ -56,6 +56,8 @@ class AuditControllerIntegrationTest {
         mvc.perform(get("/audit/export").param("actorId", "user-9"))
                 .andExpect(status().isOk()).andExpect(jsonPath("$.algorithm").value("SHA-256"))
                 .andExpect(jsonPath("$.recordCount").value(1))
+                .andExpect(jsonPath("$.fullChainVerification.intact").value(true))
+                .andExpect(jsonPath("$.lastRecordSelfHash").isNotEmpty())
                 .andExpect(jsonPath("$.records[0].payload.ssn").value("[REDACTED]"));
     }
 }
