@@ -24,12 +24,13 @@ public class AuditLogService {
     private final List<AuditRecord> archive = new ArrayList<>();
     private final ReentrantLock writeLock = new ReentrantLock();
     private final ObjectMapper mapper; private final Clock clock;
-    private final int retentionDays; private final Set<String> sensitiveFields; private final String redactionKey;
+    private final int retentionDays; private final Set<String> sensitiveFields; private final String redactionKey; private final int maxPayloadBytes;
     @Autowired
     public AuditLogService(ObjectMapper mapper, Clock clock, @Value("${audit.retention-days:365}") int retentionDays,
                            @Value("${audit.sensitive-payload-fields:password,ssn,token,secret}") String fields,
-                           @Value("${audit.redaction-key:development-only-change-me}") String redactionKey) {
-        this.mapper = mapper; this.clock = clock; this.retentionDays = retentionDays; this.redactionKey = redactionKey;
+                           @Value("${audit.redaction-key:development-only-change-me}") String redactionKey,
+                           @Value("${audit.max-payload-bytes:65536}") int maxPayloadBytes) {
+        this.mapper = mapper; this.clock = clock; this.retentionDays = retentionDays; this.redactionKey = redactionKey; this.maxPayloadBytes = maxPayloadBytes;
         this.sensitiveFields = Arrays.stream(fields.split(",")).map(String::trim).filter(s -> !s.isEmpty()).collect(java.util.stream.Collectors.toUnmodifiableSet());
     }
     public AuditRecord append(AuditWriteRequest request) {
@@ -37,6 +38,7 @@ public class AuditLogService {
         try {
             long sequence = active.size() + archive.size() + 1L;
             String previous = active.isEmpty() ? (archive.isEmpty() ? null : archive.getLast().selfHash()) : active.getLast().selfHash();
+            enforcePayloadSize(request.payload());
             Instant now = clock.instant(); JsonNode payload = sanitizeForStorage(request.payload());
             String hash = HashChain.compute(sequence, request.eventType(), request.actorId(), request.resourceType(), request.resourceId(), payload, now.toString(), previous, mapper);
             AuditRecord record = new AuditRecord(sequence, request.eventType(), request.actorId(), request.resourceType(), request.resourceId(), payload, now, hash, previous);
@@ -63,6 +65,10 @@ public class AuditLogService {
         JsonNode payload = input.deepCopy();
         if (payload.isObject()) sensitiveFields.forEach(field -> { if (payload.has(field)) ((tools.jackson.databind.node.ObjectNode) payload).put(field, "[REDACTED:" + hmac(payload.get(field).toString()) + "]"); });
         return payload;
+    }
+    private void enforcePayloadSize(JsonNode payload) {
+        if (payload.toString().getBytes(StandardCharsets.UTF_8).length > maxPayloadBytes)
+            throw new IllegalArgumentException("payload exceeds the configured size limit");
     }
     private String hmac(String value) {
         try {

@@ -19,7 +19,7 @@ class AuditControllerIntegrationTest {
 
     @BeforeEach void setUp() {
         ObjectMapper mapper = new ObjectMapper();
-        mvc = standaloneSetup(new AuditController(new AuditLogService(mapper, Clock.systemUTC(), 365, "token,ssn", "test-redaction-key")))
+        mvc = standaloneSetup(new AuditController(new AuditLogService(mapper, Clock.systemUTC(), 365, "token,ssn", "test-redaction-key", 65536)))
                 .setControllerAdvice(new ApiExceptionHandler()).build();
     }
 
@@ -50,6 +50,12 @@ class AuditControllerIntegrationTest {
         String event = "{\"eventType\":\"READ\",\"actorId\":\"" + oversizedActor + "\",\"resourceType\":\"DOCUMENT\",\"resourceId\":\"doc-1\",\"payload\":{}}";
         mvc.perform(post("/audit/write").contentType(MediaType.APPLICATION_JSON).content(event))
                 .andExpect(status().isBadRequest()).andExpect(jsonPath("$.fieldErrors.actorId").value("size must be between 0 and 128"));
+    }
+
+    @Test void rejectsOversizedPayload() throws Exception {
+        String event = "{\"eventType\":\"READ\",\"actorId\":\"user-1\",\"resourceType\":\"DOCUMENT\",\"resourceId\":\"doc-1\",\"payload\":{\"notes\":\"" + "x".repeat(65536) + "\"}}";
+        mvc.perform(post("/audit/write").contentType(MediaType.APPLICATION_JSON).content(event))
+                .andExpect(status().isBadRequest()).andExpect(jsonPath("$.error").value("payload exceeds the configured size limit"));
     }
 
     @Test void rejectsAnInvalidTimeRange() throws Exception {

@@ -12,6 +12,7 @@
 | GET | `/audit/report` | Return `ACCOUNT_ACCESS` events for a client account. |
 
 Write-request field limits: `eventType`, `actorId`, and `resourceType` are limited to 128 characters; `resourceId` is limited to 256 characters.
+Payloads larger than the configured `audit.max-payload-bytes` limit (65,536 bytes by default) are rejected.
 
 ## Compliance-report scope
 

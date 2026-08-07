@@ -18,6 +18,7 @@ This log records AI-assisted work performed in this repository. The submitting e
 | Validation error contract | Proposed a consistent JSON response containing a general error and field-specific validation messages for invalid write requests. | Accepted to make API-client error handling predictable. | HTTP integration test passed. |
 | Export scope guard | Identified that an unfiltered export could disclose the entire audit log. Proposed requiring an actor or resource filter. | Accepted to reduce accidental broad data disclosure. | HTTP integration test passed. |
 | Metadata bounds | Proposed maximum lengths for event and identifier fields to avoid oversized chain metadata. | Accepted with 128-character event/actor/type limits and a 256-character resource-ID limit. | HTTP integration test passed. |
+| Payload-size guard | Proposed a configurable maximum serialized payload size before a record can enter the chain. | Accepted with a 65,536-byte default and a rejection test. | Focused test suite passed. |
 
 ## Rejected or revised AI output
 
