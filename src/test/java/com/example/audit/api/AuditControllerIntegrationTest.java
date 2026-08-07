@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import tools.jackson.databind.ObjectMapper;
+import java.time.Clock;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -17,7 +18,7 @@ class AuditControllerIntegrationTest {
 
     @BeforeEach void setUp() {
         ObjectMapper mapper = new ObjectMapper();
-        mvc = standaloneSetup(new AuditController(new AuditLogService(mapper, 365, "token,ssn")))
+        mvc = standaloneSetup(new AuditController(new AuditLogService(mapper, Clock.systemUTC(), 365, "token,ssn")))
                 .setControllerAdvice(new ApiExceptionHandler()).build();
     }
 

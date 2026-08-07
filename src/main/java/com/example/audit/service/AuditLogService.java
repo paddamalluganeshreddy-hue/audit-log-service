@@ -6,6 +6,7 @@ import com.example.audit.domain.ChainVerification;
 import tools.jackson.databind.JsonNode;
 import tools.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.time.Clock;
 import java.time.Instant;
@@ -19,11 +20,12 @@ public class AuditLogService {
     private final List<AuditRecord> active = new ArrayList<>();
     private final List<AuditRecord> archive = new ArrayList<>();
     private final ReentrantLock writeLock = new ReentrantLock();
-    private final ObjectMapper mapper; private final Clock clock = Clock.systemUTC();
+    private final ObjectMapper mapper; private final Clock clock;
     private final int retentionDays; private final Set<String> sensitiveFields;
-    public AuditLogService(ObjectMapper mapper, @Value("${audit.retention-days:365}") int retentionDays,
+    @Autowired
+    public AuditLogService(ObjectMapper mapper, Clock clock, @Value("${audit.retention-days:365}") int retentionDays,
                            @Value("${audit.sensitive-payload-fields:password,ssn,token,secret}") String fields) {
-        this.mapper = mapper; this.retentionDays = retentionDays;
+        this.mapper = mapper; this.clock = clock; this.retentionDays = retentionDays;
         this.sensitiveFields = Arrays.stream(fields.split(",")).map(String::trim).filter(s -> !s.isEmpty()).collect(java.util.stream.Collectors.toUnmodifiableSet());
     }
     public AuditRecord append(AuditWriteRequest request) {

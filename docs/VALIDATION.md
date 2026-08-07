@@ -6,6 +6,7 @@
 - Hash-chain unit tests: intact chains verify successfully and modified payloads yield `SELF_HASH_MISMATCH`.
 - HTTP integration tests: successful writes, filtered queries, configured redaction, verification, compliance reports, exports, and invalid write requests.
 - Query hardening: reversed time ranges are rejected with a clear 400 response, and compliance reports require a non-blank account ID.
+- Retention integrity: a deterministic clock test archives expired data and confirms that verification and queries include the archive.
 - Spring application context: completed successfully in 68.56 seconds in the local environment.
 
 ## Submission review checklist
